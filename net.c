@@ -44,7 +44,7 @@ int get_if_info(char* iface, uint8_t* mac, uint8_t* ip, int* index)
 }
 
 void send_packet(int index, void * data, size_t size) {
-    int sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
+    int sockfd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (sockfd < 0) {
         perror("socket");
         return;
@@ -53,28 +53,25 @@ void send_packet(int index, void * data, size_t size) {
     struct sockaddr_ll sll;
 
     memset((void*)&sll, 0, sizeof(sll));
-    sll.sll_family = AF_INET;   
+    sll.sll_family = AF_PACKET;   
     sll.sll_ifindex = index;
-    sll.sll_halen = ETH_ALEN;
     sll.sll_protocol = htons(ETH_P_ALL);
-    sll.sll_addr[0] = 0xff;
-    sll.sll_addr[1] = 0xff;
-    sll.sll_addr[2] = 0xff;
-    sll.sll_addr[3] = 0xff;
-    sll.sll_addr[4] = 0xff;
-    sll.sll_addr[5] = 0xff;
-
-    int send_len = sendto(sockfd, data, size, 0,(const struct sockaddr*)&sll,sizeof(struct sockaddr_ll));
+    
+    bind(sockfd, (struct sockaddr*)&sll, sizeof(sll));
+    size_t send_len = write(sockfd, data, size);
     if(send_len<0) {
         printf("Error sending, len=%d, error=%d\n",send_len,errno);
         perror("sendto");
     } else {
+        for (int i = 0; i < send_len; i++) {
+            printf("%.2x ", ((uint8_t*)data)[i]);
+        }
         printf("Sent %d/%d bytes through: %d\n",send_len, size, index);
     }
     close(sockfd);
 }
 
-void send_eth(char* ifname, uint8_t* mac, uint8_t *data, uint8_t *length) {
+void send_eth(char* ifname, uint8_t* mac, uint8_t *data, uint8_t* type, uint8_t *length) {
     uint8_t sha[6];
     uint8_t ip[4];
     int interface_index;
@@ -82,9 +79,9 @@ void send_eth(char* ifname, uint8_t* mac, uint8_t *data, uint8_t *length) {
     get_if_info(ifname, sha, ip, &interface_index);
     
     struct eth ethpkt;
-    eth(&ethpkt, sha,  mac, data, length);
+    eth(&ethpkt, sha,  mac, data, type, length);
 
-    send_packet(interface_index, &ethpkt, sizeof(ethpkt));
+    send_packet(interface_index, ethpkt.data, *length);
 }
 
 /*
@@ -122,11 +119,12 @@ void send_arp(unsigned char* ifname, unsigned char* ip) {
 
 int main() {
     uint8_t data[100];
+    //uint8_t type[2] = {0x08, 0x06};
+    uint8_t type[2] = {0x88, 0xb5};
     uint8_t length[2] = {0x00, 0x64};
-
     for (int i = 0; i < 100; i++) data[i] = i;
-    send_eth("enp0s8", (uint8_t*)"\xff\xff\xff\xff\xff\xff", data, length);
 
-//    send_eth("enp0s8", (uint8_t*)"\x08\x00\x27\xd6\xff\xd1", data, length);
+    send_eth("eth1", (uint8_t*)"\xff\xff\xff\xff\xff\xff", data, type, length);
+
     return 0;
 }

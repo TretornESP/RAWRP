@@ -5,7 +5,7 @@
 #include "crc.h"
 #include "ether.h"
 
-void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *length) {
+void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length) {
     uint16_t llength = *length;
     eth->data = malloc(llength);
 
@@ -33,11 +33,8 @@ void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *leng
 
 */
 
-    //memcpy(eth->length, length, 2);
-    eth->length[0] = 0x00;
-    eth->length[1] = 0x08;
+    memcpy(eth->length, type, 2);
     memcpy(eth->sa, sa, 6);
-
     memcpy(eth->da, da, 6);
 
 
@@ -54,8 +51,5 @@ void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *leng
     eth->crc = crc32_byte(packet, llength+14);
     memcpy(packet+llength+14, &eth->crc, 4);
     eth->data = packet;
-    for (int i = 0; i < llength+18; i++) {
-        printf("%02x ", packet[i]);
-    }
     printf("\n");
 }
