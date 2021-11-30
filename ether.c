@@ -56,7 +56,10 @@ void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t 
     free(eth->data);
     eth->crc = crc32_byte(packet, llength+14);
     memcpy(packet+llength+14, &eth->crc, 4);
-    eth->data = packet;
+    eth->data = packet; 
+    //Esto es una mierda, deberia seguir la interfaz de data_arp que te saca el paquete del header
+    //Pero como entonces habria que esperar para calcular el crc me da profunda pereza y lo hago asi
+ 
     printf("\n");
 }
 
