@@ -30,14 +30,14 @@ It just sends an ARP request.
     -Length:     len of payload
    
 ###TLDR:
-
+```
   s = socket()
   sockaddr_ll sll
   sll. [] = stuff
   bind(s, sll, sizeof(sll))
   write(s, payload, len)
   close(s)
-   
+```
 ## ARP packets:
 
   ARP packets are handcrafted in arp.c
