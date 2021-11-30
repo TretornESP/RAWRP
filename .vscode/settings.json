@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "crc.h": "c",
-        "stdint.h": "c",
-        "ether.h": "c"
-    }
-}
