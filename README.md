@@ -31,12 +31,12 @@ It just sends an ARP request.
    
 ###TLDR:
 
-   s = socket()
-   sockaddr_ll sll
-   sll. [] = stuff
-   bind(s, sll, sizeof(sll))
-   write(s, payload, len)
-   close(s)
+   -s = socket()
+   -sockaddr_ll sll
+   -sll. [] = stuff
+   -bind(s, sll, sizeof(sll))
+   -write(s, payload, len)
+   -close(s)
    
 ## ARP packets:
 
