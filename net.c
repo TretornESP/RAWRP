@@ -63,10 +63,11 @@ void send_packet(int index, void * data, size_t size) {
         printf("Error sending, len=%d, error=%d\n",send_len,errno);
         perror("sendto");
     } else {
+        printf("Raw dump of packet: ");
         for (int i = 0; i < send_len; i++) {
             printf("%.2x ", ((uint8_t*)data)[i]);
         }
-        printf("Sent %d/%d bytes through: %d\n",send_len, size, index);
+        printf("\nSent %d/%d bytes through: %d\n",send_len, size, index);
     }
     close(sockfd);
 }

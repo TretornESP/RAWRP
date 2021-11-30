@@ -53,9 +53,13 @@ void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t 
     memcpy(packet+6, &eth->sa, 6);
     memcpy(packet+12, &eth->length, 2);
     memcpy(packet+14, eth->data, llength);
-
+    free(eth->data);
     eth->crc = crc32_byte(packet, llength+14);
     memcpy(packet+llength+14, &eth->crc, 4);
     eth->data = packet;
     printf("\n");
+}
+
+void destroy_eth(struct eth *eth) {
+    free(eth->data);
 }

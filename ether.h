@@ -13,4 +13,5 @@ struct eth {/*
 } __attribute__((packed));
 
 void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length);
+void destroy_eth(struct eth *eth);
 #endif
