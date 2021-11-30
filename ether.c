@@ -1,9 +1,10 @@
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include "crc.h"
 #include "ether.h"
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h> //You can delete this if you start implementing fragmentation
+
 
 //#define INCLUDE_PREAMBLE //Only if your nic is weird
 
@@ -60,7 +61,6 @@ void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t 
     //Esto es una mierda, deberia seguir la interfaz de data_arp que te saca el paquete del header
     //Pero como entonces habria que esperar para calcular el crc me da profunda pereza y lo hago asi
  
-    printf("\n");
 }
 
 void destroy_eth(struct eth *eth) {

@@ -51,3 +51,8 @@ It just sends an ARP request.
   2. save changes and compile with gcc *.c
   3. execute with ./a.out
 
+## TODO:
+  1. Improve the ether interface to fit arp model (we create the header and then we calculate the packet from it)
+  2. Implement Ethernet fragmentation
+  3. Improve file structure (probably a folder per OSI layer) and create a makefile
+  4. Expand functionality, maybe start building layer 3?

@@ -1,6 +1,8 @@
 #ifndef _ARP_H
 #define _ARP_H
+
 #include <stdint.h>
+
 struct arp {
     uint16_t htype;
     uint16_t ptype;

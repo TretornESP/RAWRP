@@ -1,24 +1,9 @@
 #include "arp.h"
+
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
+
 #include <arpa/inet.h>
-
-void set_arp_sha(struct arp* arp, uint8_t* sha) {
-    memcpy(arp->sha, sha, arp->hlen);
-}
-
-void set_arp_spa(struct arp* arp, uint8_t* spa) {
-    memcpy(arp->spa, spa, arp->plen);
-}
-
-void set_arp_tha(struct arp* arp, uint8_t* tha) {
-    memcpy(arp->tha, tha, arp->hlen);
-}
-
-void set_arp_tpa(struct arp* arp, uint8_t* tpa) {
-    memcpy(arp->tpa, tpa, arp->plen);
-}
 
 void init_arp(struct arp* arp, uint8_t* mac, uint8_t* sip, const char* tips) {
 

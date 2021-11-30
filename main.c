@@ -2,9 +2,7 @@
 #include "arp.h"
 #include "ether.h"
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdint.h>
 
 void rawrp(char* ifname, char* tips) {
