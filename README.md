@@ -46,7 +46,7 @@ It just sends an ARP request.
   ETH frames are also handcrafted in ether.c
   CRC calculations were boring so i stole the code from somewhere i cannot recall crc.c
   
-##Usage:
+## Usage:
   1. Edit the call to rawrp in main.c with your interface name and the ip to request MAC for.
   2. save changes and compile with gcc *.c
   3. execute with ./a.out
