@@ -13,7 +13,9 @@ struct arp {
     uint8_t *tpa;
 } __attribute__((packed));
 
-void init_arp(struct arp* arp, uint8_t* mac, uint8_t* ip);
+void init_arp(struct arp* arp, uint8_t* mac, uint8_t* sip, const char* tips);
 void destroy_arp(struct arp* arp);
-
+void size_arp(struct arp* arp, uint8_t* size);
+void ethertype_arp(uint8_t *type);
+void data_arp(struct arp* arp, uint8_t* data);
 #endif

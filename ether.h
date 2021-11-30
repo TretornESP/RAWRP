@@ -12,5 +12,5 @@ struct eth {/*
     uint32_t crc;
 } __attribute__((packed));
 
-void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length);
+void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length);
 #endif

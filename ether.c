@@ -5,7 +5,9 @@
 #include "crc.h"
 #include "ether.h"
 
-void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length) {
+//#define INCLUDE_PREAMBLE //Only if your nic is weird
+
+void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length) {
     uint16_t llength = *length;
     eth->data = malloc(llength);
 
@@ -25,24 +27,28 @@ void eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type
         length[1] = llength >> 8;
     }
     memcpy(eth->data, data, llength);
-/*
+
+    #ifdef INCLUDE_PREAMBLE
+
     for (int i = 0; i < 7; i++) {
         eth->preamble[i] = 0x55;
     }
     eth->sfd = 0x7e;
+    #endif
 
-*/
 
     memcpy(eth->length, type, 2);
     memcpy(eth->sa, sa, 6);
     memcpy(eth->da, da, 6);
 
-
     uint8_t* packet = malloc(llength+26);
 
-/*
+    #ifdef INCLUDE_PREAMBLE
+
     memcpy(packet, &eth->preamble, 7);
-    memcpy(packet+7, &eth->sfd, 1);*/
+    memcpy(packet+7, &eth->sfd, 1);
+
+    #endif
     memcpy(packet, &eth->da, 6);
     memcpy(packet+6, &eth->sa, 6);
     memcpy(packet+12, &eth->length, 2);
