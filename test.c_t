@@ -1,0 +1,27 @@
+#include <string.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+#include <linux/if_packet.h>
+#include <net/ethernet.h>
+
+#include <stdio.h>
+
+int main() {
+	struct ifreq ifr;
+    struct ifmap map;
+
+    int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+    ifr.ifr_addr.sa_family = AF_INET;
+    strncpy(ifr.ifr_name , "eth0", IFNAMSIZ-1);
+
+    ioctl(sock, SIOCGIFMAP, &ifr);
+    memcpy(&map, &ifr.ifr_map, sizeof(map));
+
+    printf("ifr_map.mem_start = %lx\n", map.mem_start);
+    printf("ifr_map.mem_end = %lx\n", map.mem_end);
+    printf("ifr_map.base_addr = %x\n", map.base_addr);
+    printf("ifr_map.irq = %x\n", map.irq);
+    printf("ifr_map.dma = %x\n", map.dma);
+    printf("ifr_map.port = %x\n", map.port);
+}

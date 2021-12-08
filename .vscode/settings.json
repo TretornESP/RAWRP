@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "crc.h": "c"
+        "crc.h": "c",
+        "iface.h": "c",
+        "unistd.h": "c",
+        "string.h": "c"
     }
 }
