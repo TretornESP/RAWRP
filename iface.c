@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 void init_nic(struct nic *nic, char* iface)
 {
 	struct ifreq ifr;
@@ -48,6 +49,8 @@ void init_nic(struct nic *nic, char* iface)
     nic->buffer_size = NIC_BUFFER;
     nic->thread = thread;
 
+    pthread_mutex_init(&nic->mutex, NULL);
+    pthread_cond_init(&nic->cond, NULL);
     return;
 }
 
@@ -79,13 +82,13 @@ void *receive_data(void * args) {
         while ((read_bytes = read(nic->fd, nic->buffer, nic->buffer_size)) != 0) {
             if (read_bytes < 0) {
                 perror("recv");
-                nl->error_callback(nic->buffer, errno);
+                nl->error_callback(nic, nic->buffer, errno);
             } else if (read_bytes == 0) {
                 printf("recv: EOF\n");
-                nl->eof_callback(nic->buffer, read_bytes);
+                nl->eof_callback(nic, nic->buffer, read_bytes);
             }
             printf("recv: %d bytes\n", read_bytes);
-            nl->callback(nic->buffer, read_bytes);
+            nl->callback(nic, nic->buffer, read_bytes);
         }
     }
 

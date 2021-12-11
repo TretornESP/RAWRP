@@ -88,11 +88,21 @@ void data_arp(struct arp* arp, uint8_t* data) {
     memcpy(data+8+arp->hlen, arp->spa, arp->plen);
     memcpy(data+8+arp->hlen+arp->plen, arp->tha, arp->hlen);
     memcpy(data+8+arp->hlen+arp->plen+arp->hlen, arp->tpa, arp->plen);
+    printf("Copied %d bytes\n", 8+arp->hlen+arp->plen+arp->hlen+arp->plen);
 }
 
-void init_arp_cache(struct arp_cache** cache) {
-    *cache = (struct arp_cache*)malloc(sizeof(struct arp_cache));
-    (*cache)->next = NULL;
+void init_arp_cache(struct arp_cache* cache) {
+    cache->mac = malloc(cache->hlen);
+    cache->ip = malloc(cache->plen);
+    cache->next = NULL;
+}
+
+void destroy_arp_cache(struct arp_cache* cache) {
+    free(cache->mac);
+    free(cache->ip);
+    if (cache->next != NULL) {
+        destroy_arp_cache(cache->next);
+    }
 }
 
 void add_arp_cache(struct arp_cache** cache, uint8_t* ip, uint8_t* mac, uint8_t hlen, uint8_t plen) {
@@ -141,6 +151,7 @@ int get_arp_cache(struct arp_cache** cache, uint8_t* ip, uint8_t* mac, uint8_t h
     struct arp_cache* aux = *cache;
     int index = 0;
     while (aux != NULL) {
+
         if (memcmp(aux->ip, ip, plen) == 0) {
             memcpy(mac, aux->mac, hlen);
             return index;

@@ -8,7 +8,7 @@
 void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length) {
     uint16_t llength = *length;
     eth->data = malloc(llength);
-
+    printf("%p\n", eth->data);
     if (llength < 46) {
         llength = 46;
         free(eth->data);
@@ -25,7 +25,6 @@ void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t 
         length[1] = llength >> 8;
     }
     memcpy(eth->data, data, llength);
-
     #ifdef INCLUDE_PREAMBLE
 
     for (int i = 0; i < 7; i++) {

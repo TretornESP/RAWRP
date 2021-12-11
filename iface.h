@@ -5,8 +5,6 @@
 #include <stdint.h>
 #define NIC_BUFFER 4096
 
-typedef void (*callback_t)(void *, ssize_t);
-
 struct nic {
     int index;
     uint8_t mac[6];
@@ -16,7 +14,11 @@ struct nic {
     void * buffer;
     pthread_t *thread;
     ssize_t buffer_size;
+    pthread_cond_t cond;
+    pthread_mutex_t mutex;
 };
+
+typedef void (*callback_t)(struct nic*, void *, ssize_t);
 
 struct network_listener {
     struct nic *nic;

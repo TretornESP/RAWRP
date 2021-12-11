@@ -3,6 +3,7 @@
         "crc.h": "c",
         "iface.h": "c",
         "unistd.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "dispatchers.h": "c"
     }
 }

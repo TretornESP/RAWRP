@@ -32,5 +32,6 @@ uint8_t get_eth_version(struct eth *eth);
 void get_eth_data(struct eth *eth, uint8_t *data, uint16_t size);
 void init_eth(struct eth *eth, uint8_t* sa, uint8_t *da, uint8_t *data, uint8_t *type, uint8_t *length);
 void destroy_eth(struct eth *eth);
+
 #endif
 
