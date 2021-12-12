@@ -96,7 +96,7 @@ void rawicmp(struct nic* nic, char * tips) {
     setup_ip(&ipc, 0x1, sip, 0, 0, 1500);
 
     struct ip ip_packet;
-    init_ip(&ip_packet, &ipc, icmp_packet, 64+32, tips);
+    init_ip(&ip_packet, &ipc, icmp_packet, packet_size, tips);
     printf("=============================\n");
     printf("IP Initialized\n");
     printf("Version: %d\n", ip_packet.version);
@@ -139,15 +139,21 @@ void rawicmp(struct nic* nic, char * tips) {
         printf("MAC: %02x:%02x:%02x:%02x:%02x:%02x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
         pthread_mutex_unlock(&nic->mutex);
     }
+    size_t ips = size_ip(&ip_packet);
 
     struct eth eth;
     uint8_t length[2];
     uint8_t type[2];
     ethertype_ip(type);
-    size_ip(&ip_packet, length);
+    length[0] = ips >> 8;
+    length[1] = ips & 0xff;
+    
+    printf("SIZE ICMP: %d\n", icmp_size(&icmp));
+    printf("SIZE IP: %d\n", size_ip(&ip_packet));
+    printf("SIZE ETH: %d\n", size_eth(&eth)+ips);
 
     init_eth(&eth, nic->mac, mac, ip_packet_data, type, length);
-    send_packet(nic, eth.data, *length);
+    send_packet(nic, eth.data, size_eth(&eth)+ips);
 
     printf("Packet sent\n");
 
@@ -188,3 +194,8 @@ int main() {
 */
     return 0;
 }
+
+
+//Ethernet                             Ethernet
+//TARJETA DE RED                       TARJETA DE RED                      TARJETA DE RED
+//MEDIO FISICO-------------------------MEDIO FISICO------------------------MEDIO FISICO

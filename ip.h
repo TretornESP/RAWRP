@@ -12,8 +12,8 @@
 #define ICMP_PROTO 1
 
 struct ip {
-    uint8_t version : 4;
     uint8_t ihl : 4;
+    uint8_t version : 4;
     uint8_t tos;
     uint16_t tot_len;
     uint16_t id;
@@ -48,7 +48,7 @@ struct fragment {
 void setup_ip(struct ip_conf * conf, uint8_t protocol, uint32_t saddr, uint32_t * options, size_t optlen, size_t mtu);
 void init_ip(struct ip* ip, struct ip_conf* conf, void* data, size_t len, char* daddr);
 void data_ip(struct ip* ip, uint8_t * data);
-void size_ip(struct ip* ip, uint8_t* size);
+size_t size_ip(struct ip* ip);
 void destroy_ip(struct ip* ip);
 void ethertype_ip(uint8_t * type);
 #endif

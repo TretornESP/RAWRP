@@ -126,3 +126,7 @@ void get_eth_data(struct eth *eth, uint8_t *data, uint16_t size) {
 void destroy_eth(struct eth *eth) {
     free(eth->data);
 }
+
+size_t size_eth(struct eth *eth) {
+    return 18;
+}

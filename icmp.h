@@ -14,11 +14,11 @@ struct icmp{
     uint8_t code;
     uint16_t checksum;
     uint16_t id;
-    uint16_t seq;
-    uint8_t *data;
+    uint16_t seq; 
+    uint8_t *data; 
 }  __attribute__((packed));
 
-uint16_t calculate_icmp_checksum(uint8_t type, uint8_t code, uint16_t *data, size_t len);
+uint16_t calculate_icmp_checksum(uint8_t type, uint8_t code, uint8_t id, uint8_t seq, uint16_t *data, size_t len);
 void init_icmp(struct icmp *icmp, uint8_t type, uint8_t code);
 void data_icmp(struct icmp *icmp, uint8_t* data);
 void destroy_icmp(struct icmp *icmp);

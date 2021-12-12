@@ -4,6 +4,7 @@
         "iface.h": "c",
         "unistd.h": "c",
         "string.h": "c",
-        "dispatchers.h": "c"
+        "dispatchers.h": "c",
+        "stdint.h": "c"
     }
 }

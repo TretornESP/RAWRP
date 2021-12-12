@@ -4,12 +4,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+void swap_bytes(uint8_t *a, uint8_t *b) {
+    uint8_t tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+#define N_BYTE(x, y) (x >> (8 * y) & 0xff)
+
 void setup_ip(struct ip_conf * conf, uint8_t protocol, uint32_t saddr, uint32_t * options, size_t optlen, size_t mtu) {
     conf->protocol = protocol;
-    conf->saddr = saddr;
+    conf->saddr = htonl(saddr);
     conf->options = options;
     conf->optlen = optlen;
     conf->mtu = mtu;
+    printf("Source: %d.%d.%d.%d\n", N_BYTE(conf->saddr, 0), N_BYTE(conf->saddr, 1), N_BYTE(conf->saddr, 2), N_BYTE(conf->saddr, 3));
 }
 
 void init_ip(struct ip* ip, struct ip_conf* conf, void* data, size_t len, char* daddr) {
@@ -53,25 +61,26 @@ void destroy_ip(struct ip* ip) {
 }
 
 void data_ip(struct ip* ip, uint8_t * data) {
-    uint8_t nip[20];
-    memcpy(nip, ip, 20);
-
-    for (int i = 0; i < 20; i++) {
-        nip[i] = (nip[i] & 0xF) << 4 | (nip[i] >> 4);
-    }
-
     size_t bytes_header = 5*4;
+
+    uint8_t nip[bytes_header];
+    memcpy(nip, ip, bytes_header);
+
+    swap_bytes(&nip[2], &nip[3]);
+    swap_bytes(&nip[4], &nip[5]);
+
     memcpy(data, &nip, bytes_header);
-    memcpy(data+ip->ihl*4, ip->data, ip->tot_len - ip->ihl*4); 
 
     if (ip->options != NULL) {
-        memcpy(data+bytes_header, ip->options, ip->ihl*4-20);
+        memcpy(data + bytes_header, ip->options, (ip->ihl - 5)*4);
     }
+    
+    memcpy(data+bytes_header+(ip->ihl-5)*4, ip->data, ip->tot_len - ip->ihl*4); 
+    
 }
 
-void size_ip(struct ip* ip, uint8_t* size) {
-    size[0] = ip->tot_len;
-    size[1] = ip->tot_len >> 8;
+size_t size_ip(struct ip* ip) {
+    return ip->tot_len;
 }
 
 void ethertype_ip(uint8_t * type) {
